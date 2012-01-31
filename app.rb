@@ -47,10 +47,7 @@ get '/bus/:bus_no/:bus_stop' do
 end
 
 get '/:name' do
-  pages = YAML.load(File.open('buses.yml', 'r').read)
-  ap pages
-  params[:name] ||= 'home'
-  
+  pages = YAML.load(File.open('buses.yml', 'r').read)  
   page = pages.select { |page| page[:label] == params[:name] }
   if page.empty?
     "Page not found" 
@@ -65,5 +62,10 @@ get '/:name' do
     @links = pages.map { |page| page[:label] }
     erb :stops
   end
+end
+
+get '/' do
+  pages = YAML.load(File.open('buses.yml', 'r').read)  
+  redirect "/#{pages.first[:label]}"
 end
 
