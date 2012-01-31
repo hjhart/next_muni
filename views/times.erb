@@ -1,0 +1,16 @@
+Bus '<%= @bus %>' at stop '<%= @bus_stop %>'<br/>
+<%= @times.map { |time| time == 0 ? "Arriving" : time }.join(", ") %>
+<%= "No results" if @times.empty? %>
+<br/><br/>
+Add to:
+<form action="/add" method="post">
+	<select name='page'>
+		<% @links.each do |link| %>
+		<option value='<%= link %>'><%= link %></option>
+		<% end %> 
+	</select>
+	<input type="text" name="label" />
+	<input type="hidden" name="bus" value="<%= @bus %>"/>
+	<input type="hidden" name="bus_stop" value="<%= @bus_stop %>"/>
+	<input type="submit" value="Submit"/>
+</form>

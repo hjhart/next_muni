@@ -1,0 +1,10 @@
+<% @directions.each do |direction| %>
+<h1> <%= direction[:name] %></h1>
+<ul>
+	<% direction[:stops].each do |bus_stop_id, name| %>
+	<li>
+		<a href="/bus/<%= @bus %>/<%= bus_stop_id %>"><%= name %></a>
+	</li>
+	<% end %>
+</ul>
+<% end %>

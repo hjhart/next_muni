@@ -1,0 +1,25 @@
+--- 
+- :label: home
+  :buses: 
+  - :label: 38BX
+    :stop: 4347
+    :bus: 38BX
+  - :label: 31BX
+    :stop: 4347
+    :bus: 31BX
+- :label: work
+  :buses: 
+  - :label: 38L
+    :stop: 4759
+    :bus: 38L
+- :label: other
+  :buses: 
+  - :label: 30x @ Buchanan
+    :stop: 3959
+    :bus: 30X
+  - :label: 45 @ Laguna
+    :stop: 6771
+    :bus: 45
+  - :label: 43 @ Fillmore
+    :stop: 3941
+    :bus: 43

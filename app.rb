@@ -1,56 +1,69 @@
 require 'rubygems'
 require 'next_muni'
 require 'sinatra'
+require 'yaml'
+require 'awesome_print'
 
-get '/' do
-  @stops = [
-    {
-     :bus => "38BX",
-     :times => NextMuni.get_times("38BX", 4347)
-  },
-  {
-     :bus => "31BX",
-     :times => NextMuni.get_times("31BX", 4347)
-  },
-  {
-     :bus => "38L",
-     :times => NextMuni.get_times("38L", 4725)
-  },
-  {
-     :bus => "38 @ Main/Howard",
-     :times => NextMuni.get_times("38", 7620)
-     
-  },
-  ]
-  
-  erb :stops
+get '/buses' do
+  @routes = NextMuni.get_routes('sf-muni')
+  erb :buses
 end
 
-get '/work' do
-  @stops = [
-    {
-     :bus => "38L",
-     :times => NextMuni.get_times("38L", 4759)
-  },
-    {
-     :bus => "38",
-     :times => NextMuni.get_times("38", 4759)
-  },
-    {
-     :bus => "43",
-     :times => NextMuni.get_times("43", 6092)
-  },
-  {
-     :bus => "31BX",
-     :times => NextMuni.get_times("31BX", 6092)
-  },
-  {
-     :bus => "38BX",
-     :times => NextMuni.get_times("38BX", 6092)
+post '/add' do
+  pages = YAML.load(File.open('buses.yml', 'r').read)
+  params[:bus]
+  params[:bus_stop]
+  params[:page]
+  
+  "#{params[:page]} on bus #{params[:bus]} with stop #{params[:bus_stop]}"
+
+  page = pages.select { |page| page[:label] == params[:page] }
+  return "Error saving the page" if page.empty?
+  
+  buses = page.first[:buses]
+  buses << {
+    :label => params[:label],
+    :stop => params[:bus_stop],
+    :bus => params[:bus]
   }
-  ]
   
-  erb :stops
+  File.open('buses.yml', 'w') { |f| f.puts pages.to_yaml }
+  redirect "/#{params[:page]}"
 end
 
+get '/bus/:bus_no' do
+  @bus = params[:bus_no]
+  @directions = NextMuni.get_stops(@bus)
+  erb :add
+end
+
+get '/bus/:bus_no/:bus_stop' do
+  @bus = params[:bus_no]
+  @bus_stop = params[:bus_stop]
+  @times = NextMuni.get_times(@bus, @bus_stop)
+  pages = YAML.load(File.open('buses.yml', 'r').read)
+  @links = pages.map { |page| page[:label] }
+  erb :times
+end
+
+get '/:name' do
+  pages = YAML.load(File.open('buses.yml', 'r').read)
+  ap pages
+  params[:name] ||= 'home'
   
+  page = pages.select { |page| page[:label] == params[:name] }
+  if page.empty?
+    "Page not found" 
+  else
+    page = page.first
+    @stops = page[:buses].map do |bus|
+      {
+      :bus => bus[:label],
+      :times => NextMuni.get_times(bus[:bus].to_s, bus[:stop])
+      }
+    end
+    @links = pages.map { |page| page[:label] }
+    erb :stops
+  end
+end
+

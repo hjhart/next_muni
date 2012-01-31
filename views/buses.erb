@@ -1,0 +1,8 @@
+<h1>SF Muni</h1>
+<ul>
+	<% @routes.each do |route| %>
+	<li>
+		<a href="/bus/<%= route[:id] %>"><%= route[:title] %></a>
+	</li>
+	<% end %>
+</ul>

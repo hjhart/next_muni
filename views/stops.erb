@@ -1,5 +1,4 @@
 <ul>
-
 <% @stops.each do |stop| %>
 		<li><%= stop[:bus] %>:
 			<% unless stop[:times].empty? %>
@@ -11,6 +10,10 @@
 <% end %>
 </ul>
 <ul>
-	<li><a href="/">To Home</a></li>
-	<li><a href="/work">To Work</a></li>
+<% @links.each do |link| %>
+	<li><a href="/<%= link %>">To <%= link.capitalize %></a></li>
+<% end %>
+</ul>
+<ul>
+	<li><a href="/buses">Buses</a></li>
 </ul>
