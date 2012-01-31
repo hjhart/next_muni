@@ -1,0 +1,16 @@
+<ul>
+
+<% @stops.each do |stop| %>
+		<li><%= stop[:bus] %>:
+			<% unless stop[:times].empty? %>
+			<%= stop[:times].join(", ") %>
+			<% else %>
+			 No times listed.
+			<% end %>
+		</li>
+<% end %>
+</ul>
+<ul>
+	<li><a href="/">To Home</a></li>
+	<li><a href="/work">To Work</a></li>
+</ul>
