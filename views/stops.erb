@@ -1,19 +1,43 @@
-<ul>
+<div class="row">
 <% @stops.each do |stop| %>
-		<li><%= stop[:bus] %>:
+	<div class="twelve columns">
+	<h6>
+	<%= stop[:bus] %>
+	</h6>
+	</div>
+		<div class="twelve columns">
 			<% unless stop[:times].empty? %>
-			<%= stop[:times].join(", ") %>
+				<% stop[:times].each_with_index do |time, index| %>
+				<% span_class = index == 0 ? "success large right_margin" : "secondary" %>
+				<% time =  time.to_i == 0 ? "Approaching" : time %>
+				<span class="radius <%= span_class %> label"><%= time %></span>
+				<% end %>
 			<% else %>
-			 No times listed.
+			<span class="radius alert label">No times</span>
 			<% end %>
+		</div>
+<% end %>
+</div>
+
+<br/><br/>
+
+<div class="row">
+	<div class="button-bar">
+		<ul class="button-group">
+	<% @links.each do |link| %>
+	    <li>
+			<a href="/<%= link %>" class="button medium">To <%= link.capitalize %></a>
 		</li>
-<% end %>
+	<% end %>
+		</ul>
+	</div>
+</div>
+
+<div class="row">
+	<div class="button-bar">
+		<ul class="button-group">
+			<li><a href="/buses" class="button secondary small">Other Buses</a></li>
+			<li><a href="javascript:history.go(0)" class="button secondary small">Refresh page</a></li>
 </ul>
-<ul>
-<% @links.each do |link| %>
-	<li><a href="/<%= link %>">To <%= link.capitalize %></a></li>
-<% end %>
-</ul>
-<ul>
-	<li><a href="/buses">Buses</a></li>
-</ul>
+</div>
+</div>
